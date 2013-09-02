@@ -41,4 +41,5 @@ group :test do
   gem 'factory_girl_rails', '~> 4.2.1'
   gem 'fuubar'
   gem 'rspec'
+  gem 'mongoid-rspec'
 end

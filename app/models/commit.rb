@@ -4,6 +4,8 @@ class Commit
   field :repository_id, type: String
   field :ref, type: String
 
+  embeds_one :author, class_name: 'Commit::Author'
+
   validates_presence_of :ref
   validates_presence_of :repository_id
 

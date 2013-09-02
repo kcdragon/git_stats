@@ -39,4 +39,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner[:mongoid].clean
   end
+
+  config.include Mongoid::Matchers
 end

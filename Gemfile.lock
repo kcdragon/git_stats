@@ -120,6 +120,10 @@ GEM
       moped (~> 1.4)
       origin (~> 1.0)
       tzinfo (~> 0.3.22)
+    mongoid-rspec (1.9.0)
+      mongoid (>= 3.0.1)
+      rake
+      rspec (>= 2.14)
     moped (1.5.0)
     multi_json (1.7.9)
     nokogiri (1.6.0)
@@ -237,6 +241,7 @@ DEPENDENCIES
   haml-rails (~> 0.4)
   jquery-rails
   mongoid (~> 3.1.4)
+  mongoid-rspec
   rails (= 3.2.13)
   rspec
   rspec-rails

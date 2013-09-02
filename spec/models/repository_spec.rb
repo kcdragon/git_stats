@@ -10,7 +10,8 @@ describe Repository do
     end
 
     let(:git_commits) do
-      [double(sha: '1'), double(sha: '2')]
+      [double(sha: '1', author: double(name: 'foo', email: 'bar')),
+       double(sha: '2', author: double(name: 'cad', email: 'cdr'))]
     end
 
     let(:path) { '/path/to/repository' }
@@ -24,7 +25,9 @@ describe Repository do
     it 'creates Commits' do
       git_commits.each do |commit|
         Commit.where(repository_id: repository.id,
-                     ref: commit.sha).should be_exists
+                     ref: commit.sha,
+                     :author.name => commit.author.name,
+                     :author.email => commit.author.email).should be_exists
       end
     end
   end

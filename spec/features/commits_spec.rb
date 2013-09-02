@@ -9,8 +9,10 @@ describe 'commits' do
   it 'display all commits for repository' do
     visit repository_commits_path(repository)
 
-    commits.map(&:ref).each do |ref|
-      page.should have_content ref
+    commits.each do |commit|
+      page.should have_content commit.ref
+      page.should have_content commit.author.name
+      page.should have_content commit.author.email
     end
   end
 

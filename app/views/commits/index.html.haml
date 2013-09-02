@@ -1,2 +1,10 @@
-- @commits.each do |commit|
-  %p= link_to commit.ref, repository_commit_path(commit.repository_id, commit)
+%table
+  %tr
+    %th Ref
+    %th Author's Name
+    %th Author's Email
+  - @commits.each do |commit|
+    %tr
+      %td= link_to commit.ref, repository_commit_path(commit.repository_id, commit)
+      %td= commit.author.name
+      %td= commit.author.email

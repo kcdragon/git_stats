@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Commit do
+
+  it { should embed_one(:author).of_type(Commit::Author) }
+
   describe 'validations' do
     let(:repository) { create_repository }
 
