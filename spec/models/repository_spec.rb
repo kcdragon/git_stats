@@ -14,18 +14,14 @@ describe Repository do
     end
 
     let(:path) { '/path/to/repository' }
+    let!(:repository) { create_repository(path: path) }
 
     before(:each) do
       Git::Base.stub(new: git_base)
       subject.load(path)
     end
 
-    it 'creates Repository' do
-      Repository.where(path: path).should be_exists
-    end
-
     it 'creates Commits' do
-      repository = Repository.where(path: path).first
       git_commits.each do |commit|
         Commit.where(repository_id: repository.id,
                      ref: commit.sha).should be_exists

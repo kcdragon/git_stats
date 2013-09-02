@@ -1,27 +1,16 @@
 require 'spec_helper'
 
 describe RepositoriesController do
-
-  let!(:repositories) do
-    [Repository.create(path: 'one'),
-     Repository.create(path: 'two')]
-  end
-
-  shared_examples_for 'http response' do |template|
-    it 'success' do
-      expect(response).to be_success
-    end
-
-    it 'status code of 200' do
-      expect(response.status).to eq 200
-    end
-
-    it "renders #{template} template" do
-      expect(response).to render_template template
-    end
+  before(:each) do
+    Git.stub(open: double(log: []))
   end
 
   describe '#index' do
+    let!(:repositories) do
+      [Repository.create(path: 'one'),
+       Repository.create(path: 'two')]
+    end
+
     before(:each) { get :index }
 
     it 'assigns repositories' do
@@ -32,7 +21,7 @@ describe RepositoriesController do
   end
 
   describe '#show' do
-    let(:repository) { repositories.first }
+    let(:repository) { Repository.create(path: 'one') }
 
     before(:each) { get :show, id: repository.id }
 
@@ -55,33 +44,56 @@ describe RepositoriesController do
   end
 
   describe '#create' do
-    before(:each) { post :create, params }
-
     context 'when params are valid' do
       let(:params) do
-        { path: '/path' }
+        { repository: { path: '/path' } }
       end
 
+      before(:each) { post :create, params }
+
       it 'creates repository' do
-        expect(Repository.where(path: params[:path])).to be_exists
+        expect(Repository.where(path: params[:repository][:path])).to be_exists
       end
 
       it 'flashes success' do
         expect(flash[:success]).to be_present
       end
 
-      it_should_behave_like 'http response', 'index'
+      it 'status is redirect' do
+        expect(response.status).to eq 302
+      end
     end
 
-    context 'when params are not valid' do
-      let(:params) { {} }
+    context 'when path is not present' do
+      let(:params) { { repository: {} } }
+
+      before(:each) { post :create, params }
 
       it 'does not create repository' do
-        expect(Repository.where(path: params[:path])).to_not be_exists
+        expect(Repository.count).to eq 0
       end
 
       it 'repository has errors' do
         expect(assigns(:repository)).to have(1).error_on(:path)
+      end
+
+      it_should_behave_like 'http response', 'new'
+    end
+
+    context 'when path does not exist' do
+      let(:params) { { repository: { path: '/does/not/exist' } } }
+
+      before(:each) do
+        Repository.stub(:load).and_raise(StandardError)
+        post :create, params
+      end
+
+      it 'repository does not exist' do
+        expect(Repository.count).to eq 0
+      end
+
+      it 'flashes error' do
+        expect(flash[:error]).to be_present
       end
 
       it_should_behave_like 'http response', 'new'

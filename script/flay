@@ -1,0 +1,1 @@
+git status | egrep ".*modified.*(app|lib).*\.rb$" | cut -f2 -d: | sed -e 's/^[ \t]*//' | xargs flay

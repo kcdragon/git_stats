@@ -1,1 +1,6 @@
-%h1 Hello, world.
+%h1 New Repository
+
+= form_for @repository do |f|
+  = f.label :path
+  = f.text_field :path
+  = f.submit 'Load'

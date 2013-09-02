@@ -1,0 +1,2 @@
+- @commits.each do |commit|
+  %p= link_to commit.ref, repository_commit_path(commit.repository_id, commit)

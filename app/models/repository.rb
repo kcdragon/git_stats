@@ -7,12 +7,13 @@ class Repository
 
   def self.load(path)
     git = Git.open(path)
-    repository = Repository.create(path: path)
+    repository = Repository.where(path: path).first
 
     commits = git.log
     commits.each do |commit|
       Commit.create(repository_id: repository.id,
                     ref: commit.sha)
     end
+    repository
   end
 end

@@ -1,5 +1,7 @@
 GitStats::Application.routes.draw do
-  resources :repositories, except: [:edit, :update, :destroy]
+  resources :repositories, except: [:edit, :update, :destroy] do
+    resources :commits, only: [:index, :show]
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

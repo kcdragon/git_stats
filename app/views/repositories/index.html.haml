@@ -1,1 +1,6 @@
-%h1 Hello, world.
+%table
+  %tr
+    %th Path
+  - @repositories.each do |repository|
+    %tr
+      %td= link_to repository.path, repository_path(repository)
