@@ -3,8 +3,10 @@
     %th Ref
     %th Author's Name
     %th Author's Email
+    %th Date
   - @commits.each do |commit|
     %tr
       %td= link_to commit.ref, repository_commit_path(commit.repository_id, commit)
       %td= commit.author.name
       %td= commit.author.email
+      %td= commit.date

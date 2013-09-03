@@ -9,9 +9,20 @@ describe Repository do
       double(log: git_commits)
     end
 
+    def git_diff(*files)
+      entries = files.map { |f| double(path: f) }
+      double(entries: entries)
+    end
+
     let(:git_commits) do
-      [double(sha: '1', author: double(name: 'foo', email: 'bar')),
-       double(sha: '2', author: double(name: 'cad', email: 'cdr'))]
+      [double(sha: '1',
+              date: Time.now,
+              author: double(name: 'foo', email: 'bar'),
+              diff_parent: git_diff('one', 'two')),
+       double(sha: '2',
+              date: Time.now,
+              author: double(name: 'cad', email: 'cdr'),
+              diff_parent: git_diff('three', 'four'))]
     end
 
     let(:path) { '/path/to/repository' }
@@ -24,10 +35,14 @@ describe Repository do
 
     it 'creates Commits' do
       git_commits.each do |commit|
-        Commit.where(repository_id: repository.id,
-                     ref: commit.sha,
-                     :author.name => commit.author.name,
-                     :author.email => commit.author.email).should be_exists
+        cursor = Commit.where(repository_id: repository.id,
+                              ref: commit.sha,
+                              "author.name" => commit.author.name,
+                              "author.email" => commit.author.email,
+                              date: commit.date)
+
+        expect(cursor).to be_exists
+        expect(cursor.first.files.count).to eq 2
       end
     end
   end
